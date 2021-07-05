@@ -119,5 +119,5 @@ dist
 
 # customized
 .secret
-.truffle-config.js
+truffle-config.js
 test/
