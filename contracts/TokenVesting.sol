@@ -61,4 +61,8 @@ contract TokenVesting is TokenTimelock, ReentrancyGuard {
     releaseCount ++;
     nextReleaseTime = nextReleaseTime.add(linearReleaseInterval);
   }
+
+  function remainingTokens() public view returns (uint) {
+    return token().balanceOf(address(this));
+  }
 }
