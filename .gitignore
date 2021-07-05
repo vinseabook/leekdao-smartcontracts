@@ -121,3 +121,4 @@ dist
 .secret
 truffle-config.js
 test/
+build/
