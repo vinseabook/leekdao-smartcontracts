@@ -7,8 +7,8 @@ import './libraries/SafeMath.sol';
 contract UniswapV2ERC20 {
     using SafeMathUniswap for uint;
 
-    string public constant name = 'CryptoLeek LP Token';
-    string public constant symbol = 'CLLP';
+    string public constant name = 'LeekDAO LP Token';
+    string public constant symbol = 'Leek-LP';
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
