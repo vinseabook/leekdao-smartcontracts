@@ -29,7 +29,6 @@ contract LeekToken is Context, IERC20, Ownable {
     string private _name = 'cryptoleek.dao';
     string private _symbol = 'LEEK';
 
-
     constructor (uint256 _decimals_, uint256 _tTotal_) {
         _decimals = _decimals_;
         _tTotal = _tTotal_ * 10 ** uint256(_decimals);
