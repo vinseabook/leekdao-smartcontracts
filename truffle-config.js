@@ -52,7 +52,7 @@ module.exports = {
     },
     polygon: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, "https://affectionate-ramanujan:filled-drew-awning-yoyo-phrase-upon@nd-467-942-259.p2pify.com")
+        return new HDWalletProvider(mnemonic, "https://flamboyant-kirch:stable-crept-patchy-maimed-pout-poncho@nd-789-715-066.p2pify.com")
       },
       network_id: 137,
       gasPrice: 2000000000
@@ -64,7 +64,7 @@ module.exports = {
     // timeout: 100000
   },
 
-  contracts_directory: './contracts/',
+  contracts_directory: './contracts/leekDao',
   contracts_build_directory: './build/',
 
   // Configure your compilers
