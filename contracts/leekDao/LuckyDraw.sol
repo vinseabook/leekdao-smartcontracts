@@ -5,27 +5,24 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 contract LuckyDraw is Ownable, VRFConsumerBase {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
-    using EnumerableSet for EnumerableSet.AddressSet;
 
     bytes32 internal keyHash;
     uint256 internal fee;
 
     address[] public participants;
 
-    mapping(address => bool) public existingWinners;
     mapping(uint => address[]) public roundWinners;
     mapping(uint => RoundInfo) public roundInfoMapping;
 
     uint public currentRound = 1;
     uint public rewards = 10 * 10 ** 18;
 
-    event LuckDrawLog(bytes32 indexed requestId, uint roundNumber, address[] winners);
+    event LuckyDrawRequest(bytes32 indexed requestId, uint roundNumber, uint drawNumber);
 
     // The token being sold
     IERC20 public _token;
@@ -51,7 +48,6 @@ contract LuckyDraw is Ownable, VRFConsumerBase {
     {
         keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4;
         fee = 0.0001 * 10 ** 18; // 0.0001 LINK (Varies by network)
-
         _token = token_;
     }
 
@@ -67,6 +63,8 @@ contract LuckyDraw is Ownable, VRFConsumerBase {
             requestId: _requestId,
             drawNumber: number
         });
+
+        emit LuckyDrawRequest(_requestId, currentRound, number);
     }
 
     /**
@@ -86,7 +84,6 @@ contract LuckyDraw is Ownable, VRFConsumerBase {
         uint drawNo = roundInfo.drawNumber;
         require(_requestId == requestId, "The oracle requestId is not matched");
 
-
         address[] storage winners = roundWinners[currentRound];
 
         for (uint i = 0; i < drawNo; i++) {
@@ -94,13 +91,12 @@ contract LuckyDraw is Ownable, VRFConsumerBase {
             uint randomIndex = (randomNumber % participants.length);
             address luckyPerson = participants[randomIndex];
 
-            if (!existingWinners[luckyPerson]) {
-                _token.safeTransfer(luckyPerson, rewards);
-                winners.push(luckyPerson);
-                existingWinners[luckyPerson] = true;
-            }
+            participants[randomIndex] = participants[participants.length - 1];
+            participants.pop();
+
+            _token.safeTransfer(luckyPerson, rewards);
+            winners.push(luckyPerson);
         }
-        emit LuckDrawLog(requestId, currentRound, winners);
         currentRound++;
     }
 
