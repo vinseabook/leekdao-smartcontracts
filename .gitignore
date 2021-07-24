@@ -122,3 +122,5 @@ dist
 truffle-config.js
 test/
 build/
+
+.DS_Store
