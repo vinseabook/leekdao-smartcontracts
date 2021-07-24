@@ -57,12 +57,20 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
       require(airdropSuccess[msg.sender] == false, "You have already collected airdrop!");
 
       if (hasRole(AIRDROP_VIP_ROLE, msg.sender)) {
-        token.safeTransfer(msg.sender, airdropAmount);
-      } else {
         token.safeTransfer(msg.sender, vipAirdropAmount);
+      } else {
+        token.safeTransfer(msg.sender, airdropAmount);
       }
 
       airdropSuccess[msg.sender] = true;
+    }
+
+    function isWhitelisted(address user) public view returns (bool) {
+      return hasRole(AIRDROP_ROLE, user);
+    }
+
+    function isVIP(address user) public view returns (bool) {
+      return hasRole(AIRDROP_VIP_ROLE, user);
     }
 
 }
