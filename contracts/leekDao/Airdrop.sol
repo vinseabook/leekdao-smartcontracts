@@ -20,16 +20,28 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
 
     uint public airdropAmount;
     uint public vipAirdropAmount;
+    uint public startBlockNumber;
+    uint public finishBlockNumber;
 
     event AirdropEvent(bytes32 indexed requestId, uint roundNumber, address[] winners);
 
     ERC20 public token;
 
-    constructor(ERC20 token_)
+    constructor(ERC20 token_, uint startBlockNumber_, uint finishBlockNumber_)
     {
         token = token_;
         airdropAmount = 10 * 10 ** (token.decimals());
         vipAirdropAmount = 100 * 10 ** (token.decimals());
+        startBlockNumber = startBlockNumber_;
+        finishBlockNumber = finishBlockNumber_;
+    }
+
+    function setStartBlockNumber(uint startBlockNumber_) public onlyOwner {
+        startBlockNumber = startBlockNumber_;
+    }
+
+    function setFinishBlockNumber(uint finishBlockNumber_) public onlyOwner {
+        finishBlockNumber = finishBlockNumber_;
     }
 
     function setAirdropAmount(uint amount_) public onlyOwner {
@@ -56,6 +68,9 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
       require(hasRole(AIRDROP_ROLE, msg.sender) || hasRole(AIRDROP_VIP_ROLE, msg.sender), "You must be whitelisted or VIP!");
       require(airdropSuccess[msg.sender] == false, "You have already collected airdrop!");
 
+      require(block.number > startBlockNumber, "The airdrop event has not started yet!");
+      require(block.number < finishBlockNumber, "The airdrop event has finished!");
+
       if (hasRole(AIRDROP_VIP_ROLE, msg.sender)) {
         token.safeTransfer(msg.sender, vipAirdropAmount);
       } else {
@@ -71,6 +86,10 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
 
     function isVIP(address user) public view returns (bool) {
       return hasRole(AIRDROP_VIP_ROLE, user);
+    }
+
+    function remainingTokens() public view returns (uint) {
+      return token.balanceOf(address(this));
     }
 
 }
