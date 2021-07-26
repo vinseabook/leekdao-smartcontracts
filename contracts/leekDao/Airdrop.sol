@@ -65,11 +65,10 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
     }
 
     function getAirdrop() public nonReentrant {
-      require(hasRole(AIRDROP_ROLE, msg.sender) || hasRole(AIRDROP_VIP_ROLE, msg.sender), "You must be whitelisted or VIP!");
-      require(airdropSuccess[msg.sender] == false, "You have already collected airdrop!");
-
       require(block.number > startBlockNumber, "The airdrop event has not started yet!");
       require(block.number < finishBlockNumber, "The airdrop event has finished!");
+      require(hasRole(AIRDROP_ROLE, msg.sender) || hasRole(AIRDROP_VIP_ROLE, msg.sender), "You must be whitelisted or VIP!");
+      require(airdropSuccess[msg.sender] == false, "You have already collected airdrop!");
 
       if (hasRole(AIRDROP_VIP_ROLE, msg.sender)) {
         token.safeTransfer(msg.sender, vipAirdropAmount);
