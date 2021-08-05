@@ -16,14 +16,12 @@ contract Airdrop is Ownable, AccessControl, ReentrancyGuard {
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
     bytes32 public constant AIRDROP_VIP_ROLE = keccak256("AIRDROP_VIP_ROLE");
 
-    mapping(address => bool) private airdropSuccess;
+    mapping(address => bool) public airdropSuccess;
 
     uint public airdropAmount;
     uint public vipAirdropAmount;
     uint public startBlockNumber;
     uint public finishBlockNumber;
-
-    event AirdropEvent(bytes32 indexed requestId, uint roundNumber, address[] winners);
 
     ERC20 public token;
 

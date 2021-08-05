@@ -70,7 +70,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             newBillBoard.city = city_;
             newBillBoard.ipfsHash = ipfsHash_;
             newBillBoard.desc = desc_;
-            newBillBoard.bidLevel = 1;
+            newBillBoard.bidLevel = 2;
             newBillBoard.owner = msg.sender;
             newBillBoard.init = true;
             billBoards[id_] = newBillBoard;
