@@ -15,6 +15,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
     ERC20 public token;
     uint public basePrice;
     uint public splitRatio;
+    uint public minimumTokenAmountToCreate;
 
     struct BillBoard {
         uint id;
@@ -28,14 +29,15 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
 
     mapping(uint => BillBoard) public billBoards;
 
-    uint[] public allBillBoards;
+    BillBoard[] private allBillBoards;
 
-    constructor(ERC20 token_, uint basePrice_, uint ratio_) {
+    constructor(ERC20 token_, uint basePrice_, uint ratio_, uint minimum_) {
         token = token_;
         require (basePrice_ >= 1 && basePrice_ <= 10000, "Base Price must be between 1 to 100");
         basePrice = basePrice_ * 10 ** (token.decimals());
         require (ratio_ >= 1 && ratio_ <= 100, "Split ratio must be between 1 to 100");
         splitRatio = ratio_;
+        minimumTokenAmountToCreate = minimum_ * 10 ** (token.decimals());
     }
 
     function bid(uint id_, string memory city_, string memory ipfsHash_, string memory desc_) public nonReentrant {
@@ -64,6 +66,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             uint remainingAmount = requiredFund.sub(amount4Previous);
             token.transferFrom(msg.sender, address(this), remainingAmount);
         } else {
+            require(tokenBalance > minimumTokenAmountToCreate, "You dont meet the minimum token amount requirement.");
             require(tokenBalance > basePrice, "You dont have enough fund!");
             BillBoard memory newBillBoard;
             newBillBoard.id = id_;
@@ -75,13 +78,13 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             newBillBoard.init = true;
             billBoards[id_] = newBillBoard;
             token.transferFrom(msg.sender, address(this), basePrice);
-            allBillBoards.push(id_);
+            allBillBoards.push(newBillBoard);
         }
     }
 
     function setBasePrice(uint basePrice_) public onlyOwner {
         require (basePrice_ >= 1 && basePrice_ <= 10000, "Base Price must be between 1 to 100");
-        basePrice = basePrice_;
+        basePrice = basePrice_ * 10 ** (token.decimals());
     }
 
     function setSplitRatio(uint ratio_) public onlyOwner {
@@ -92,4 +95,13 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
     function withDraw() public onlyOwner {
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
-}
+
+    function setMinimumTokenAmount(uint minimum_) public onlyOwner {
+        require (minimum_ > minimumTokenAmountToCreate, "Split ratio must be between 1 to 100");
+        minimumTokenAmountToCreate = minimum_ * 10 ** (token.decimals());
+    }
+
+    function getAllBillBoards() public view returns (BillBoard[] memory) {
+        return allBillBoards;
+    }
+ }
