@@ -29,7 +29,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
 
     mapping(uint => BillBoard) public billBoards;
 
-    BillBoard[] private allBillBoards;
+    uint[] private allBillBoards;
 
     constructor(ERC20 token_, uint basePrice_, uint ratio_, uint minimum_) {
         token = token_;
@@ -78,7 +78,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             newBillBoard.init = true;
             billBoards[id_] = newBillBoard;
             token.transferFrom(msg.sender, address(this), basePrice);
-            allBillBoards.push(newBillBoard);
+            allBillBoards.push(id_);
         }
     }
 
@@ -102,6 +102,12 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
     }
 
     function getAllBillBoards() public view returns (BillBoard[] memory) {
-        return allBillBoards;
+        BillBoard[] memory _billBoards_ = new BillBoard[](allBillBoards.length);
+
+        for (uint i = 0; i < allBillBoards.length; i++) {
+            _billBoards_[i] = billBoards[allBillBoards[i]];
+        }
+
+        return _billBoards_;
     }
  }
