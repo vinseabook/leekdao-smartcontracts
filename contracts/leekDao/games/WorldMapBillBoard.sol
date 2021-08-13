@@ -17,6 +17,8 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
     uint public splitRatio;
     uint public minimumTokenAmountToCreate;
 
+    bool public paused;
+
     struct BillBoard {
         uint id;
         string city;
@@ -39,13 +41,16 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
         require (ratio_ >= 1 && ratio_ <= 100, "Split ratio must be between 1 to 100");
         splitRatio = ratio_;
         minimumTokenAmountToCreate = minimum_ * 10 ** (token.decimals());
+        paused = true;
     }
 
-    function bid(uint id_, string memory city_, string memory ipfsHash_, string memory desc_,string memory twitter_) public nonReentrant {
+    function bid(uint id_, string memory city_, string memory ipfsHash_, string memory desc_, string memory twitter_) public nonReentrant {
+        require(!paused, "The game is paused!");
+
         require(msg.sender != address(0), "Please input valid msg sender address!");
         require(bytes(city_).length > 3, "Please input valid city!");
         require(bytes(ipfsHash_).length > 3, "Please input valid ipfs hash!");
-        require(bytes(desc_).length >= 0, "Please input valid desc!");
+        require(bytes(desc_).length > 0, "Please input valid desc!");
 
         BillBoard storage billBoard = billBoards[id_];
         uint tokenBalance = token.balanceOf(msg.sender);
@@ -96,12 +101,18 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
     }
 
     function withDraw() public onlyOwner {
-        token.transfer(msg.sender, token.balanceOf(address(this)));
+        uint tokenBal = token.balanceOf(address(this));
+        require (tokenBal > 0, "There is no token left in the contract");
+        token.transfer(msg.sender, tokenBal);
     }
 
     function setMinimumTokenAmount(uint minimum_) public onlyOwner {
         require (minimum_ > minimumTokenAmountToCreate, "Split ratio must be between 1 to 100");
         minimumTokenAmountToCreate = minimum_ * 10 ** (token.decimals());
+    }
+
+    function togglePaused() public onlyOwner {
+        paused = !paused;
     }
 
     function getAllBillBoards() public view returns (BillBoard[] memory) {
