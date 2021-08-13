@@ -21,6 +21,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
         uint id;
         string city;
         string ipfsHash;
+        string twitter;
         string desc;
         uint bidLevel;
         address owner;
@@ -40,7 +41,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
         minimumTokenAmountToCreate = minimum_ * 10 ** (token.decimals());
     }
 
-    function bid(uint id_, string memory city_, string memory ipfsHash_, string memory desc_) public nonReentrant {
+    function bid(uint id_, string memory city_, string memory ipfsHash_, string memory desc_,string memory twitter_) public nonReentrant {
         require(msg.sender != address(0), "Please input valid msg sender address!");
         require(bytes(city_).length > 3, "Please input valid city!");
         require(bytes(ipfsHash_).length > 3, "Please input valid ipfs hash!");
@@ -56,6 +57,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             require(tokenBalance > requiredFund, "You dont have enough fund!");
             billBoard.ipfsHash = ipfsHash_;
             billBoard.desc = desc_;
+            billBoard.twitter = twitter_;
             billBoard.bidLevel = prevBidLevel.mul(2);
             address prevOwner = billBoard.owner;
             billBoard.owner = msg.sender;
@@ -73,6 +75,7 @@ contract WorldMapBillBoard is Ownable, ReentrancyGuard {
             newBillBoard.city = city_;
             newBillBoard.ipfsHash = ipfsHash_;
             newBillBoard.desc = desc_;
+            newBillBoard.twitter = twitter_;
             newBillBoard.bidLevel = 2;
             newBillBoard.owner = msg.sender;
             newBillBoard.init = true;
