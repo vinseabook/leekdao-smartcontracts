@@ -19,13 +19,14 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
 
     WorldMapBillBoard public worldMapBillBoard;
 
-    uint public mintPrice = 1 ether;
+    uint public mintPrice;
 
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
 
     constructor(WorldMapBillBoard worldMapBillBoard_) ERC721("WorldMapBillBoardCollection", "WMBB") {
         worldMapBillBoard = worldMapBillBoard_;
+        mintPrice = 1 ether;
     }
 
     function mint(uint boardId, string memory _tokenURI) public payable nonReentrant returns (uint256) {
@@ -119,7 +120,7 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
         require(result, "Withdraw failed!");
     }
 
-    function setMintPrice(uint _mintPrice) public onlyOwner {
+    function setMintPrice(uint _mintPrice) external onlyOwner {
         mintPrice = _mintPrice;
     }
 
