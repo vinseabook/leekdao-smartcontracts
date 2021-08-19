@@ -19,6 +19,8 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
 
     WorldMapBillBoard public worldMapBillBoard;
 
+    uint public mintPrice = 1 ether;
+
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
 
@@ -30,7 +32,7 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
 
         require(boardId >= 0, "Board id doesnt exists!");
         require(bytes(_tokenURI).length > 28, "Token URI format is wrong!");
-        require(1 ether == msg.value, "You need to pay exactly 1 ether | matic | bnb etc depending on blockchain!");
+        require(mintPrice == msg.value, "You need to pay exactly 1 ether | matic | bnb etc depending on blockchain!");
 
         WorldMapBillBoard.BillBoard memory billBoard = findBillBoard(boardId);
 
@@ -115,6 +117,10 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
         address payable _owner = payable(owner());
         bool result = _owner.send(amount);
         require(result, "Withdraw failed!");
+    }
+
+    function setMintPrice(uint _mintPrice) public onlyOwner {
+        mintPrice = _mintPrice;
     }
 
 }
