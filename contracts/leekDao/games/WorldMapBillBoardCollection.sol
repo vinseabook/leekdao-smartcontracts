@@ -91,6 +91,8 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
     }
 
     function burn(uint256 tokenId) public {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+
         super._burn(tokenId);
 
         if (bytes(_tokenURIs[tokenId]).length != 0) {
