@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// spacecats live smart contract 0xB2cbdc22D0fc9dA42954d9D06bb946e8D77Dbf70
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -33,7 +32,7 @@ contract WorldMapBillBoardCollection is ERC721Enumerable, Ownable, ReentrancyGua
 
         require(boardId >= 0, "Board id doesnt exists!");
         require(bytes(_tokenURI).length > 28, "Token URI format is wrong!");
-        require(mintPrice == msg.value, "You need to pay exactly 1 ether | matic | bnb etc depending on blockchain!");
+        require(msg.value >= mintPrice, "You need to pay a little to avoid spam!");
 
         WorldMapBillBoard.BillBoard memory billBoard = findBillBoard(boardId);
 
