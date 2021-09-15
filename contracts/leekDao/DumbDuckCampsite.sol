@@ -11,9 +11,9 @@ contract DumbDuck is ERC721, AccessControl, Ownable {
     using SafeMath for uint256;
     // Create a new role identifier for the airdrop role
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
-    uint public constant MAX_DUMBDUCKS = 1000;
+    uint public constant MAX_DUMBDUCKS = 10000;
     uint public constant MAX_ADOPTION = 50;
-    uint public constant RESERVE_DUMBDUCKS = 10;
+    uint public constant RESERVE_DUMBDUCKS = 30;
     uint public constant FLAT_PRICE = 0.05 ether;
 
     bool public hasSaleStarted;
