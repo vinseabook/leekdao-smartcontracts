@@ -1,5 +1,6 @@
 // contracts/DumbDuck.sol
 // SPDX-License-Identifier: MIT
+// Ethereum mainnet 0xbA0b0314014fB197697c1F56F1BE1932f4E5769E
 pragma solidity ^0.7.0;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.4/contracts/token/ERC721/ERC721.sol";
@@ -10,9 +11,9 @@ contract DumbDuck is ERC721, AccessControl, Ownable {
     using SafeMath for uint256;
     // Create a new role identifier for the airdrop role
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
-    uint public constant MAX_DUMBDUCKS = 1000;
+    uint public constant MAX_DUMBDUCKS = 10000;
     uint public constant MAX_ADOPTION = 50;
-    uint public constant RESERVE_DUMBDUCKS = 10;
+    uint public constant RESERVE_DUMBDUCKS = 30;
     uint public constant FLAT_PRICE = 0.05 ether;
 
     bool public hasSaleStarted;
