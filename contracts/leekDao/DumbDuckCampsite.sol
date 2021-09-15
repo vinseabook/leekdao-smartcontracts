@@ -1,5 +1,6 @@
 // contracts/DumbDuck.sol
 // SPDX-License-Identifier: MIT
+// Ethereum mainnet 0xbA0b0314014fB197697c1F56F1BE1932f4E5769E
 pragma solidity ^0.7.0;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.4/contracts/token/ERC721/ERC721.sol";
