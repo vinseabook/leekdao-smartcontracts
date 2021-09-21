@@ -64,13 +64,13 @@ module.exports = {
     // timeout: 100000
   },
 
-  contracts_directory: './contracts/leekDao',
+  contracts_directory: './contracts/spacecats',
   contracts_build_directory: './build/',
 
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.6",
+      version: "0.8.0",
       docker: false,
       settings: {
         "remappings": [],
